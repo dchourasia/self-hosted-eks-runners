@@ -1,0 +1,32 @@
+name: Runer Docker in Docker
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+    
+permissions:
+  packages: write
+  contents: read
+  id-token: write
+  
+jobs:
+
+  build:
+
+    runs-on: k8s-runner
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.ROLE_ARN }}
+        aws-region: us-east-1
+        role-session-name: githubaction@eks-runner
+    - name: check config
+      run: |
+        docker run -d nginx
+        sleep 5s
+        docker ps -a | grep nginx

@@ -1,0 +1,47 @@
+name: helm deployment
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+  workflow_dispatch:
+    
+permissions:
+  packages: write
+  contents: read
+  id-token: write
+  
+jobs:
+
+  build:
+
+    runs-on: ci360-nodejs-runner
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.ROLE_ARN }}
+        aws-region: us-east-1
+        role-session-name: githubaction@eks-runner
+    - name: helm repo setup
+      run: |
+        aws eks update-kubeconfig --name eks-cluster-us-east-1
+        kubectl config set-context --current --namespace=default
+        helm list
+        helm repo add bitnami https://charts.bitnami.com/bitnami
+        helm repo update      
+    - name: helm remote install
+      run: |
+        helm install my-redis bitnami/redis
+        helm uninstall my-redis
+    - name: helm local install
+      run: |
+        helm pull --untar bitnami/wordpress
+        helm uninstall my-wordpress
+        helm install my-wordpress wordpress/
+    - name: helm cleanup
+      run: |
+        helm repo remove bitnami

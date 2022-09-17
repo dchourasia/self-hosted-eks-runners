@@ -1,0 +1,32 @@
+name: k8s Actions
+on:
+  workflow_dispatch:
+
+
+permissions:
+  packages: write
+  contents: read
+  id-token: write
+  
+jobs:
+
+  build:
+    runs-on: ci360-go-runner
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.ROLE_ARN }}
+        aws-region: us-east-1
+        role-session-name: githubaction@eks-cluster
+    - name: Kubectl tool installer
+      uses: Azure/setup-kubectl@v2.1
+      with:
+        # Version of kubectl
+        version: latest
+    - name: deploy to k8s
+      run: |
+        aws eks update-kubeconfig --name "eks-cluster-us-east-1"
+        kubectl describe cm -n kube-system aws-auth

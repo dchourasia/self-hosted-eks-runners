@@ -1,0 +1,48 @@
+name: k8s deployment
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+    
+permissions:
+  packages: write
+  contents: read
+  id-token: write
+  
+jobs:
+
+  build:
+
+    runs-on: k8s-runner
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.ROLE_ARN }}
+        aws-region: us-east-1
+        role-session-name: githubaction@eks-runner
+    - name: Kubectl tool installer
+      uses: Azure/setup-kubectl@v2.1
+      with:
+        # Version of kubectl
+        version: latest
+    - name: Install Package
+      # You may pin to the exact commit or the version.
+      # uses: ConorMacBride/install-package@9aadf699d40a59f4eb15355d93122d2fbd7428c9
+      uses: ConorMacBride/install-package@v1.0.0
+      with:
+        apt: unzip
+    - name: deploy to k8s
+      run: |
+        aws eks update-kubeconfig --name eks-cluster-us-east-1
+        kubectl config set-context --current --namespace=default
+        aws --region us-east-1 eks get-token --cluster-name eks-cluster-us-east-1
+        kubectl config view
+        kubectl get svc
+        kubectl apply -f k8s.yaml
+        kubectl logs my-nginx
+        kubectl delete -f k8s.yaml

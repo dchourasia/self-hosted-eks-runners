@@ -1,0 +1,37 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+    
+permissions:
+  packages: write
+  contents: read
+  id-token: write
+  
+jobs:
+
+  build:
+
+    runs-on: k8s-runner
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.ROLE_ARN }}
+        aws-region: us-east-1
+        role-session-name: githubaction@eks-runner
+    - name: check config
+      run: |
+        export VERSION=0.95
+        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 795043606509.dkr.ecr.us-east-1.amazonaws.com
+        docker build -t eksrunner:eksrunner$VERSION .
+        docker tag eksrunner:eksrunner$VERSION 795043606509.dkr.ecr.us-east-1.amazonaws.com/runner:eksrunner$VERSION
+        docker push 795043606509.dkr.ecr.us-east-1.amazonaws.com/runner:eksrunner$VERSION
+        
+
+        

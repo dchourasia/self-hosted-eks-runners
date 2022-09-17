@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: my-eks-runner
+spec:
+  containers:
+  - image: 795043606509.dkr.ecr.us-east-1.amazonaws.com/runner:eksrunner0.91
+    name: eks-runner
+    resources: {}
+    envFrom:
+    - secretRef:
+        name: runner-secret
+    - configMapRef:
+        name: runner-configmap
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

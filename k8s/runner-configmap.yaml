@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  repoUrl: https://github.com/dchourasia/self-hosted-eks-runners
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: runner-configmap
