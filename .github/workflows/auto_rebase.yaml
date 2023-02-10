@@ -9,12 +9,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Local Git Rebase
-      uses: DeeDeeG/rebase-github-action@1.0-beta3
+    - name: Define variables
+      run: |
+        echo "upstream=dchourasia/self-hosted-eks-runners" >> $GITHUB_ENV
+        echo "rebase_base=main" >> $GITHUB_ENV
+        echo "rebase_head=MartinX3/android-9.0" >> $GITHUB_ENV
+    - uses: actions/checkout@v2
       with:
-        # Token to authenticate with GitHub
-        github_token: ${{ github.token }}
-        # Branch or Git ref that you are rebasing the head_branch on top of.
-        base_ref: main
-        head_branch: v1
+        fetch-depth: 0
+        ref: ${{ env.rebase_head }}
+    - name: Define git author for rebase
+      run: |
+        git config user.email "email@email.com"
+        git config user.name "Firstname Lastname"
+    - uses: repo-sync/github-sync@v2
+      with:
+        source_repo: ${{ env.upstream }}
+        source_branch: "*"
+        destination_branch: "*"
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+    - run: git rebase origin/${{ env.rebase_base }} ${{ env.rebase_head }}
+    - run: git push --force-with-lease
       
