@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
     - name: Local Git Rebase
       uses: DeeDeeG/rebase-github-action@1.0-beta3
       with:
