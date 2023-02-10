@@ -10,8 +10,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
     - name: Local Git Rebase
       uses: DeeDeeG/rebase-github-action@1.0-beta3
       with:
