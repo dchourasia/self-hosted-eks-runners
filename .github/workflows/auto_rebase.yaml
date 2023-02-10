@@ -2,28 +2,29 @@ name: Automatic Rebase
 on:
   workflow_dispatch:
 
+env:
+  source: main
+  dest: v1
+  
 jobs:
 
   build:
 
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          # check out all branches
           fetch-depth: 0
-          # use a personal access token to commit
-          # the merged code and trigger CI actions
           token: ${{ secrets.GH_ACCESS_TOKEN }}
-      - name: Update Git branch v1
+          ref: ${{ env.source }}
+      - name: Updating branch ${{ env.dest }}
         run: |
-          git config user.name "Update branch"
-          git config user.email github-actions@github.com
-          git checkout v1
-          git merge main --no-edit -m "Merged main branch on $(date +%F)"
-      - name: Push the updated branch v1
+          git config user.name "GH Bot"
+          git config user.email ghbot@github.com
+          git checkout ${{ env.dest }}
+          git merge ${{ env.source }} --no-edit -m "Merged ${{ env.source }} branch on $(date +%F)"
+      - name: Push the updated branch ${{ env.dest }}
         run: |
-          git push origin v1
+          git push origin ${{ env.dest }}
       
