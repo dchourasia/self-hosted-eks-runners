@@ -1,4 +1,4 @@
-name: Auto Update Release Branch
+name: Auto Update Release Branches
 on:
   push:
     branches: main
