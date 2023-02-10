@@ -12,7 +12,7 @@ jobs:
     - name: rebase
       run: |
         git init
-        git remote add rh ${{ secrets.GH_ACCESS_TOKEN }}github.com:dchourasia/self-hosted-eks-runners.git
+        git remote add rh ${{ secrets.GH_ACCESS_TOKEN }}@github.com:dchourasia/self-hosted-eks-runners.git
         git fetch --all
         git checkout v1
         git checkout main
