@@ -1,0 +1,23 @@
+name: Automatic Rebase
+on:
+  workflow_dispatch:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Local Git Rebase
+      uses: DeeDeeG/rebase-github-action@1.0-beta3
+      with:
+        # Token to authenticate with GitHub
+        github_token: ${{ github.token }}
+        # Branch or Git ref that you are rebasing the head_branch on top of.
+        base_ref: main
+        head_branch: v1
+      
