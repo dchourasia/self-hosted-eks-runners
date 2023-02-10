@@ -9,14 +9,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v3
     - name: rebase
       run: |
-        git init
-        git remote add rh ${{ secrets.GH_ACCESS_TOKEN }}@github.com:dchourasia/self-hosted-eks-runners.git
+        git remote -v
+        git branch
         git fetch --all
-        git checkout v1
-        git checkout main
-        git rebase main
-        git push -u rh main
         
       
