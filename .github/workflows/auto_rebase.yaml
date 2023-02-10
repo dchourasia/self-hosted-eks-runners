@@ -14,9 +14,9 @@ jobs:
         git init
         git remote add rh ${{ secrets.GH_ACCESS_TOKEN }}github.com:dchourasia/self-hosted-eks-runners.git
         git fetch --all
-        git checkout main
         git checkout v1
+        git checkout main
         git rebase main
-        git push -u rh v1
+        git push -u rh main
         
       
