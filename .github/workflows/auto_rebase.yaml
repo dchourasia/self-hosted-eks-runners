@@ -17,7 +17,7 @@ jobs:
         git fetch --all
         git checkout v1
         git checkout main
-        git rebase main
+        git rebase v1
         git push -u origin main
         
       
