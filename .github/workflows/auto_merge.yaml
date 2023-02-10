@@ -1,4 +1,4 @@
-name: Automatic Rebase
+name: Update Release Branch
 on:
   push:
     branches: main
