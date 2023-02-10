@@ -15,9 +15,9 @@ jobs:
         git remote -v
         git branch
         git fetch --all
-        git checkout v1
         git checkout main
-        git rebase v1
-        git push -u origin main
+        git checkout v1
+        git rebase main
+        git push -u origin v1
         
       
