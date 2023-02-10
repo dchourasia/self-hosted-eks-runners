@@ -13,6 +13,8 @@ jobs:
     - name: rebase
       run: |
         git remote -v
+        ls
+        pwd
         git branch
         git fetch origin v1
         git checkout v1
