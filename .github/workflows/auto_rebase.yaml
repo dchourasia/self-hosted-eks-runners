@@ -18,6 +18,6 @@ jobs:
         git checkout v1
         git checkout main
         git rebase main
-        git push -u rh main
+        git push -u origin main
         
       
